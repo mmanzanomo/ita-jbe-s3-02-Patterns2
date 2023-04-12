@@ -10,15 +10,16 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Store {
+    private Scanner scanner;
     private PaymentMethod paymentMethod;
     private int option;
     private double amount;
 
 
     public void payment() {
+        scanner = new Scanner(System.in);
         // Ask the total amount
         setAmount();
-        //amount = 120.0;
 
         // payment method options
         option = setOption();
@@ -41,12 +42,12 @@ public class Store {
         }
         //paymentMethod.payment(amount);
         if (option != 0) PaymentGateway.processPayment(amount, paymentMethod);
-
+        scanner.close();
     }
 
     public void setAmount() {
         System.out.print("Insert total amount: ");
-        try (Scanner scanner = new Scanner(System.in)){
+        try {
             this.amount = scanner.nextDouble();
             scanner.nextLine();
         } catch (InputMismatchException ime) {
@@ -67,13 +68,15 @@ public class Store {
             System.out.println("0- Cancel payment");
             System.out.print(">> ");
 
-            try (Scanner scan = new Scanner(System.in)) {
-                option = scan.nextInt();
-                scan.nextLine();
+            try {
+                option = scanner.nextInt();
+                scanner.nextLine();
             } catch (InputMismatchException ime) {
                 System.out.println(ime);
+                ime.printStackTrace();;
             } catch (Exception e) {
                 System.out.println(e);
+                e.printStackTrace();
             }
         } while (option < 0 || option > 3);
 
